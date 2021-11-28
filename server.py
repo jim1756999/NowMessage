@@ -15,11 +15,11 @@ def listen(sock_server, pipe_server):
     # IO multiplexing: loop listening socket
     rlist = [sock_server, pipe_server]  # readable
     wlist = []
-    exlist = [] # exceptional
+    xlist = [] # exceptional
 
     print(Wait_Conn)    # print info
     while True:
-        rs, ws, xs = select(rlist, wlist, exlist)   # listen multiple connections
+        rs, ws, xs = select(rlist, wlist, xlist)   # listen multiple connections
 
         for r in rs:
             if r is sock_server:
@@ -35,8 +35,8 @@ def listen(sock_server, pipe_server):
                     c.send(data)
                 conn.close()
             else:
-                # 接收客户端信息
-                # 将客户端信息发送到所有的客户端中去
+                # receive client messages
+                # send message to all the clients
                 try:
                     data = r.recv(BUFFERSIZE)
                 except:
@@ -61,7 +61,7 @@ def main():
 
     # Create two sockets
     # sock_server is a TCP server. Communication between clients and server
-    sock_server = server(SRV_SOCK_ADDR)
+    sock_server = server(SER_SOCK_ADDR)
     # pipe_server is a TCP server. Receiver the input from keyborad
     pipe_server = server(SER_PIPE_ADDR)
     

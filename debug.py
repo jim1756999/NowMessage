@@ -18,6 +18,8 @@ def test(i):
 Usage: log(str)
 It will create log.txt in the directroy.
 '''
+
+
 def log(logt=""):
     time_now = timestamp.calc()
     logt = f"[{time_now}] {logt}\n"
@@ -25,6 +27,8 @@ def log(logt=""):
     logf.write(logt)
 
 # Timestamp
+
+
 class timestamp:
     def init():
         global time_start
