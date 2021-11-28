@@ -10,9 +10,12 @@ LANGUAGE = "zh_cn"
 
 HOST = "127.0.0.1"
 
-# 服务端和客户端的连接地址
+
+# sever and client connection
 SOCK_PORT = 47736
 SOCK_ADDR = HOST, SOCK_PORT
+BINDING = "0.0.0.0"
+SRV_SOCK_ADDR = BINDING, SOCK_PORT
 
 # 服务端server.py文件中供pipe_server和pipe_client使用的套接字地址
 SER_PIPE_PORT = 48760
@@ -29,7 +32,6 @@ while True:
     n = randint(4500, 10000)
     if n not in f["ports"]:
         f['ports'].append(n)
-        print(n)
         break
 f.close()
 CLI_PIPE_PORT = n

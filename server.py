@@ -1,7 +1,6 @@
 # server.py
 
 import doctest
-import shelve
 import sys
 from multiprocessing import Process
 from select import select
@@ -54,6 +53,7 @@ def clear_all():
     f.close()
 
 def main():
+    timestamp.init()
     doctest.testmod()
 
     # delete contents in ports.dat
@@ -61,23 +61,23 @@ def main():
 
     # Create two sockets
     # sock_server is a TCP server. Communication between clients and server
-    sock_server = server(SOCK_ADDR)
+    sock_server = server(SRV_SOCK_ADDR)
     # pipe_server is a TCP server. Receiver the input from keyborad
     pipe_server = server(SER_PIPE_ADDR)
     
 
-    # 开始一个子进程，执行listen函数
+    # create a subprocess, excuting listen()
     p = Process(target=listen, args=(sock_server, pipe_server))
     p.daemon = True
     p.start()
     
-    # 循环接收键盘输入
+    # loop receive input from keyboard
     while True:
         try:
-            # 从标准输入流（键盘）读取一行
+            # read a line from standard input stream
             data = sys.stdin.readline()
         except KeyboardInterrupt:
-            # 如果遇到退出/中止信号，关闭套接字，结束子进程，退出程序
+            # If an exit/abort signal is encountered, close the socket, end the child process, and exit the program
             sock_server.close()
             pipe_server.close()
             p.terminate()
@@ -85,7 +85,7 @@ def main():
             break
 
         if not data:
-            # 如果从键盘获取数据为空，继续循环
+            # If the data obtained from the keyboard is empty, continue to loop
             continue
         else:
             # 获得键盘数据，创建客户端套接字pipe_client，将键盘输入传输给pipe_server

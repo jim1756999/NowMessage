@@ -23,7 +23,7 @@ def log(logt=""):
     logf.write(logt)
 
 # Timestamp
-def timestamp():
+class timestamp:
     def init():
         global time_start
         time_start = time.time()
