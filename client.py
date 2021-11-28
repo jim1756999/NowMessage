@@ -5,7 +5,7 @@ from multiprocessing import Process
 from select import select
 from socket import *
 
-from settings import *
+from config import *
 
 
 def connect(sock_client, pipe_server, name):

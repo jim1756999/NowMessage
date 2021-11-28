@@ -1,35 +1,37 @@
 # server.py
 
+import doctest
 import shelve
 import sys
 from multiprocessing import Process
 from select import select
 from socket import *
 
-from settings import *
+from config import *
+from debug import *
 from i18n import *
 
 
 def listen(sock_server, pipe_server):
-    # IO多路复用：循环监听套接字
-    rlist = [sock_server, pipe_server]
+    # IO multiplexing: loop listening socket
+    rlist = [sock_server, pipe_server]  # readable
     wlist = []
-    xlist = []
+    exlist = [] # exceptional
 
-    print("等待连接...")
+    print(Wait_Conn)    # print info
     while True:
-        rs, ws, xs = select(rlist, wlist, xlist)
+        rs, ws, xs = select(rlist, wlist, exlist)   # listen multiple connections
 
         for r in rs:
             if r is sock_server:
-                # 接受客户端连接
+                # accept client connection
                 conn, addr = sock_server.accept()
                 rlist.append(conn)
             elif r is pipe_server:
-                # 接收键盘输入并发送到所有客户端去
+                # receive input and send to clients
                 conn, addr = pipe_server.accept()
                 data = conn.recv(BUFFERSIZE)
-                data = bytes("管理员：", "UTF-8") + data
+                data = bytes(Admin_Announce, "UTF-8") + data
                 for c in rlist[2:]:
                     c.send(data)
                 conn.close()
@@ -51,15 +53,18 @@ def clear_all():
     f['ports'].clear()
     f.close()
 
-if __name__ == '__main__':
-    # 首先将ports内容都删除
+def main():
+    doctest.testmod()
+
+    # delete contents in ports.dat
     clear_all()
 
-    # 创建两个套接字
-    # 套接字sock_server是一个TCP服务端，负责服务端与客户端的交流
-    # 套接字pipe_server也是一个TCP服务端，不过起到管道的作用，负责接收键盘输入
+    # Create two sockets
+    # sock_server is a TCP server. Communication between clients and server
     sock_server = server(SOCK_ADDR)
+    # pipe_server is a TCP server. Receiver the input from keyborad
     pipe_server = server(SER_PIPE_ADDR)
+    
 
     # 开始一个子进程，执行listen函数
     p = Process(target=listen, args=(sock_server, pipe_server))
@@ -70,7 +75,7 @@ if __name__ == '__main__':
     while True:
         try:
             # 从标准输入流（键盘）读取一行
-            data = sys.stdin.readline()  
+            data = sys.stdin.readline()
         except KeyboardInterrupt:
             # 如果遇到退出/中止信号，关闭套接字，结束子进程，退出程序
             sock_server.close()
@@ -87,3 +92,6 @@ if __name__ == '__main__':
             pipe_client = client(SER_PIPE_ADDR)
             pipe_client.send(bytes(data, "UTF-8"))
             pipe_client.close()
+
+if __name__ == '__main__':
+    main()

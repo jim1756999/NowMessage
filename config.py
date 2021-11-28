@@ -5,14 +5,17 @@ import shelve
 from random import randint
 from socket import *
 
+# Supported language zh_cn, en_us
+LANGUAGE = "zh_cn"
+
 HOST = "127.0.0.1"
 
 # 服务端和客户端的连接地址
-SOCK_PORT = 4444
+SOCK_PORT = 47736
 SOCK_ADDR = HOST, SOCK_PORT
 
 # 服务端server.py文件中供pipe_server和pipe_client使用的套接字地址
-SER_PIPE_PORT = 4321
+SER_PIPE_PORT = 48760
 SER_PIPE_ADDR = HOST, SER_PIPE_PORT
 
 # 客户端client.py文件中供pipe_server和pipe_client使用的套接字地址
@@ -26,11 +29,10 @@ while True:
     n = randint(4500, 10000)
     if n not in f["ports"]:
         f['ports'].append(n)
+        print(n)
         break
 f.close()
 CLI_PIPE_PORT = n
-
-
 CLI_PIPE_ADDR = HOST, CLI_PIPE_PORT
 
 # 缓冲区大小
