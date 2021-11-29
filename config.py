@@ -6,7 +6,7 @@ from random import randint
 from socket import *
 
 # Supported language zh_cn, en_us
-LANGUAGE = "zh_cn"
+LANGUAGE = "en_uk"
 
 HOST = "127.0.0.1"
 
