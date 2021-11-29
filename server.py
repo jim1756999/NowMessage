@@ -61,7 +61,7 @@ def main():
 
     http_serv = Process(target=start_http_ser)
     http_serv.daemon = True
-    http_serv.start()
+    # http_serv.start()
 
     # delete contents in ports.dat
     clear_all()
