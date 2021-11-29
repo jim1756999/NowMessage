@@ -17,7 +17,7 @@ SOCK_ADDR = HOST, SOCK_PORT
 BINDING = "0.0.0.0"
 SER_SOCK_ADDR = BINDING, SOCK_PORT
 
-# 服务端server.py文件中供pipe_server和pipe_client使用的套接字地址
+# Socket address used by pipe_server and pipe_client in server server.py file
 SER_PIPE_PORT = 48760
 SER_PIPE_ADDR = HOST, SER_PIPE_PORT
 

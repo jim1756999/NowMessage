@@ -18,30 +18,40 @@ def listen(sock_server, pipe_server):
     xlist = [] # exceptional
 
     print(Wait_Conn)    # print info
+    # log("[LISTEN] Started")
     while True:
+        '''
+        Win32 API winsock2.h select function
+        MSDN Reference: https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-select
+        Python Reference: https://docs.python.org/3/library/select.html
+
+        return the total number of socket handles that are ready and contained in the fd_set structures
+        fd_set 文件描述符_集合：与打开的socket相对应  socket句柄
+        '''
         rs, ws, xs = select(rlist, wlist, xlist)   # listen multiple connections
 
-        for r in rs:
-            if r is sock_server:
+        for i in rs:
+            if i is sock_server:
                 # accept client connection
-                conn, addr = sock_server.accept()
-                rlist.append(conn)
-            elif r is pipe_server:
+                s_obj, addr = sock_server.accept()
+                # accept() -> (socket object, address info)
+                rlist.append(s_obj)
+            elif i is pipe_server:
                 # receive input and send to clients
-                conn, addr = pipe_server.accept()
-                data = conn.recv(BUFFERSIZE)
+                s_obj, addr = pipe_server.accept()
+                data = s_obj.recv(BUFFERSIZE)
                 data = bytes(Admin_Announce, "UTF-8") + data
                 for c in rlist[2:]:
                     c.send(data)
-                conn.close()
+                s_obj.close()
             else:
                 # receive client messages
                 # send message to all the clients
                 try:
-                    data = r.recv(BUFFERSIZE)
+                    data = i.recv(BUFFERSIZE)
                 except:
-                    r.close()
-                    rlist.remove(r)
+                    i.close()
+                    rlist.remove(i)
                 else:
                     print(data.decode(), end="")
                     for c in rlist[2:]:
@@ -84,7 +94,16 @@ def main():
             # read a line from standard input stream
             data = sys.stdin.readline()
             if data == "/help\n":
-                print("man page")
+                print("")
+                print("Manual")
+                print("/help    Manual")
+                print("/exit    Exit the program")
+            elif data == "/exit\n":
+                sock_server.close()
+                pipe_server.close()
+                p.terminate()
+                clear_all()
+                break
         except KeyboardInterrupt:
             # If an exit/abort signal is encountered, close the socket, end the child process, and exit the program
             sock_server.close()

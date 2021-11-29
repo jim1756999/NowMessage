@@ -1,3 +1,4 @@
+from socket import socket
 from typing import Mapping
 import debug
 import doctest
@@ -10,5 +11,9 @@ def test(i):
     [DEBUG] Output is 1
     '''
     print("[DEBUG] Output is", i)
+    tt = "tt"
+    return tt
 test(1)
 main()
+
+socket.accept()
