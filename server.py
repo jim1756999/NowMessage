@@ -52,9 +52,16 @@ def clear_all():
     f['ports'].clear()
     f.close()
 
+def start_http_ser():
+    os.system("python -m http.server 8888")
+
 def main():
     timestamp.init()
     doctest.testmod()
+
+    http_serv = Process(target=start_http_ser)
+    http_serv.daemon = True
+    # http_serv.start()
 
     # delete contents in ports.dat
     clear_all()
@@ -76,6 +83,8 @@ def main():
         try:
             # read a line from standard input stream
             data = sys.stdin.readline()
+            if data == "/help\n":
+                print("man page")
         except KeyboardInterrupt:
             # If an exit/abort signal is encountered, close the socket, end the child process, and exit the program
             sock_server.close()
@@ -88,7 +97,7 @@ def main():
             # If the data obtained from the keyboard is empty, continue to loop
             continue
         else:
-            # 获得键盘数据，创建客户端套接字pipe_client，将键盘输入传输给pipe_server
+            # Obtain keyboard data, create a client client pipe_client, and transmit keyboard input to pipe_server
             pipe_client = client(SER_PIPE_ADDR)
             pipe_client.send(bytes(data, "UTF-8"))
             pipe_client.close()
