@@ -9,7 +9,7 @@ from config import *
 
 
 def connect(sock_client, pipe_server, name):
-    # IO多路复用：循环监听套接字
+    # IO multiplexing：loop listening socket
     rlist = [sock_client, pipe_server]
     wlist = []
     xlist = []
@@ -19,11 +19,11 @@ def connect(sock_client, pipe_server, name):
 
         for r in rs:
             if r is sock_client:
-                # 接受服务端的信息
+                # accept server information
                 data = sock_client.recv(BUFFERSIZE).decode()
                 print(data, end="")
             elif r is pipe_server:
-                # 接受键盘输入并发送给服务端
+                # accept keyboard input and send to server
                 conn, addr = pipe_server.accept()
                 data = conn.recv(BUFFERSIZE)
                 data = bytes(name + "：", "UTF-8") + data
@@ -36,28 +36,31 @@ def get_name():
 
 
 if __name__ == '__main__':
-    # 使用get_name函数获得用户名
+    # use the get_name fuction to get the username
     name = get_name()
 
-    # 创建两个套接字
-    # 套接字sock_client是一个TCP客户端，负责服务端与客户端的交流
-    # 套接字pipe_server也是一个TCP服务端，不过起到管道的作用，负责接收键盘输入
+    # create two sockets
+    # the socket sock_client is a TCP client, responsible for the communication between the server and the client            
+    # the socket pipe_server is also a TCP client，but it acts as a conduit, responsible for receiving keyboard input
     sock_client = client(SOCK_ADDR)
     sock_client.send(bytes(name + "加入了聊天室。\n", "UTF-8"))
     pipe_server = server(CLI_PIPE_ADDR)
 
-    # 开始一个子进程，执行connect函数
+    # start a sub process, execute connect fuction
     p = Process(target=connect, args=(sock_client, pipe_server, name))
     p.daemon = True
     p.start()
 
-    # 循环接收键盘输入
+    # receiving keyboard input cyclically
+
+
+
     while True:
         try:
-            # 从标准输入流（键盘）读取一行
+            # from the standard input stream（keyboard）read a line
             data = sys.stdin.readline()
         except KeyboardInterrupt:
-            # 如果遇到退出/中止信号，发送退出信息，关闭套接字，结束子进程，退出程序
+            # if an exit/abort signal is encountered, send an exit message, close the socket, terminate the sub process, and exit the program
             sock_client.send(bytes(name + "退出了聊天室。\n", "UTF-8"))
             sock_client.close()
             pipe_server.close()
@@ -65,10 +68,10 @@ if __name__ == '__main__':
             break
 
         if not data:
-            # 如果从键盘获取数据为空，继续循环
+            # if the data retrieved from the keyboard is empty, continue the loop
             continue
         else:
-            # 获得键盘数据，创建客户端套接字pipe_client，将键盘输入传输给pipe_server
+            # get the keyboard data，create a client socket pipe_client，and transfer the keyboard input to pipe_server
             pipe_client = client(CLI_PIPE_ADDR)
             pipe_client.send(bytes(data, "UTF-8"))
             pipe_client.close()
