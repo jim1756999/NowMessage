@@ -58,7 +58,7 @@ def listen(sock_server, pipe_server):
                         c.send(data)
 
 def clear_all():
-    f = shelve.open("ports")
+    f = shelve.open("./dat/ports")
     f['ports'].clear()
     f.close()
 
@@ -123,3 +123,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

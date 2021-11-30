@@ -24,10 +24,10 @@ SER_PIPE_ADDR = HOST, SER_PIPE_PORT
 # 客户端client.py文件中供pipe_server和pipe_client使用的套接字地址
 # 因为每个客户端都必须有不同的套接字来作起到连接键盘输入和网络套接字之间的管道的作用
 # 使用一个文件记录下每一次运行出现的端口号，以保证不重复
-if not os.path.exists("ports.dat"):
-    f = shelve.open("ports")
+if not os.path.exists("./dat/ports.dat"):
+    f = shelve.open("./dat/ports")
     f["ports"] = []
-f = shelve.open("ports")
+f = shelve.open("./dat/ports")
 while True:
     n = randint(4500, 10000)
     if n not in f["ports"]:
