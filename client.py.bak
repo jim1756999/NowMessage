@@ -37,7 +37,7 @@ def main():
     name = input("User name: ")
 
     # create two sockets
-    # the socket sock_client is a TCP client, responsible for the communication between the server and the client            
+    # the socket sock_client is a TCP client, responsible for the communication between the server and the client
     # the socket pipe_server is also a TCP client，but it acts as a conduit, responsible for receiving keyboard input
     sock_client = client(SOCK_ADDR)
     sock_client.send(bytes(name + Join_Room + "\n", "UTF-8"))
@@ -49,8 +49,6 @@ def main():
     p.start()
 
     # receiving keyboard input cyclically
-
-
 
     while True:
         try:

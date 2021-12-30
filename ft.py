@@ -2,5 +2,3 @@
 import config
 
 
-
-client.connect()
