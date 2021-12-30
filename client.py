@@ -32,9 +32,12 @@ def connect(sock_client, pipe_server):
 
 
 def main():
-    # use the get_name fuction to get the username
+    link()
+    listenkeyboard()
 
-    # create two sockets
+
+def link():
+        # create two sockets
     # the socket sock_client is a TCP client, responsible for the communication between the server and the client            
     # the socket pipe_server is also a TCP client，but it acts as a conduit, responsible for receiving keyboard input
     global sock_client
@@ -48,8 +51,6 @@ def main():
     pcon = Process(target=connect, args=(sock_client, pipe_server))
     pcon.daemon = True
     pcon.start()
-
-    listenkeyboard()
 
 
 def listenkeyboard():
