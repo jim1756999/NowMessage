@@ -6,6 +6,7 @@ from select import select
 from socket import *
 
 from config import *
+from i18n import *
 
 
 def connect(sock_client, pipe_server, name):
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     # the socket sock_client is a TCP client, responsible for the communication between the server and the client            
     # the socket pipe_server is also a TCP client，but it acts as a conduit, responsible for receiving keyboard input
     sock_client = client(SOCK_ADDR)
-    sock_client.send(bytes(name + "加入了聊天室。\n", "UTF-8"))
+    sock_client.send(bytes(name + Join_Room + "\n", "UTF-8"))
     pipe_server = server(CLI_PIPE_ADDR)
 
     # start a sub process, execute connect fuction
