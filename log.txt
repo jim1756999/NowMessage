@@ -1,2 +1,6 @@
 [0.0] 
 [0.01] [MAIN] Program started
+[0.0] 
+[0.0] [MAIN] Program started
+[0.0] 
+[0.0] [MAIN] Program started
