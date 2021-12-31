@@ -23,7 +23,7 @@ It will create log.txt in the directroy.
 def log(logt=""):
     time_now = timestamp.calc()
     logt = f"[{time_now}] {logt}\n"
-    logf = open("log.txt", mode='a')
+    logf = open("./log/log.txt", mode='a')
     logf.write(logt)
 
 # Timestamp
