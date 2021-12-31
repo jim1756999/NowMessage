@@ -1,7 +1,35 @@
-from multiprocessing import Process
+# client.py
 
-from txtclient import *
+import sys
+from multiprocessing import Process
+from select import select
+from socket import *
+
 from config import *
+from i18n import *
+
+
+def connect(sock_client, pipe_server, name):
+    # IO multiplexing：loop listening socket
+    rlist = [sock_client, pipe_server]
+    wlist = []
+    xlist = []
+
+    while True:
+        rs, ws, xs = select(rlist, wlist, xlist)
+
+        for r in rs:
+            if r is sock_client:
+                # accept server information
+                data = sock_client.recv(BUFFERSIZE).decode()
+                print(data, end="")
+            elif r is pipe_server:
+                # accept keyboard input and send to server
+                conn, addr = pipe_server.accept()
+                data = conn.recv(BUFFERSIZE)
+                data = bytes(name + "：", "UTF-8") + data
+                sock_client.send(data)
+                conn.close()
 
 
 def main():
@@ -42,6 +70,7 @@ def main():
             pipe_client = client(CLI_PIPE_ADDR)
             pipe_client.send(bytes(data, "UTF-8"))
             pipe_client.close()
+
 
 if __name__ == '__main__':
     main()
