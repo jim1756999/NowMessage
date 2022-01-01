@@ -39,11 +39,11 @@ def listen(sock_server, pipe_server):
             elif i is pipe_server:
                 # receive input and send to clients
                 s_obj, addr = pipe_server.accept()
-                data = s_obj.recv(BUFFERSIZE)
+                # data = s_obj.recv(BUFFERSIZE)
                 data = bytes(Admin_Announce, "UTF-8") + data
-                for c in rlist[2:]:
-                    c.send(data)
-                s_obj.close()
+                # for c in rlist[2:]:
+                    # c.send(data)
+                # s_obj.close()
             else:
                 # receive client messages
                 # send message to all the clients
@@ -53,7 +53,11 @@ def listen(sock_server, pipe_server):
                     i.close()
                     rlist.remove(i)
                 else:
-                    print(data.decode(), end="")
+                    # print(data.decode(), end="")
+                    filewrite = open("1.png", "wb")
+                    filewrite.write(data)
+                    print(data)
+                    # pass
                     for c in rlist[2:]:
                         c.send(data)
 
@@ -79,9 +83,9 @@ def main():
     # Create two sockets
     # sock_server is a TCP server. Communication between clients and server
     sock_server = server(SER_SOCK_ADDR)
-    # pipe_server is a TCP server. Receiver the input from keyborad
+    # pipe_server is a TCP server. Receiver the input from keyboard
     pipe_server = server(SER_PIPE_ADDR)
-    
+
 
     # create a subprocess, excuting listen()
     p = Process(target=listen, args=(sock_server, pipe_server))
