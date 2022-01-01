@@ -1,5 +1,6 @@
 
 import config
+import pickle
 
 # client.py
 
@@ -25,8 +26,9 @@ def connect(sock_client, pipe_server):
         for r in rs:
             if r is sock_client:
                 # accept server information
-                data = sock_client.recv(BUFFERSIZE).decode()
-                print(data, end="")
+                # data = sock_client.recv(BUFFERSIZE).decode()
+                # print(data, end="")
+                pass
             elif r is pipe_server:
                 # accept keyboard input and send to server
                 conn, addr = pipe_server.accept()
@@ -66,7 +68,11 @@ def listenkeyboard():
         try:
             # from the standard input stream（keyboard）read a line
             filename = sys.stdin.readline()
-            openfile = open("txt.py", mode="r")
+            filename = filename[:-1]
+            print(filename)
+            filesize = os.path.getsize(filename)
+            BUFFERSIZE = filesize
+            openfile = open(filename, mode="rb")
             data = openfile.read()
         except KeyboardInterrupt:
             # if an exit/abort signal is encountered, send an exit message, close the socket, terminate the sub process, and exit the program
@@ -81,7 +87,8 @@ def listenkeyboard():
         else:
             # get the keyboard data，create a client socket pipe_client，and transfer the keyboard input to pipe_server
             pipe_client = client(CLI_PIPE_ADDR) 
-            pipe_client.send(bytes(data, "UTF-8"))
+            # dataencoded = pickle.dumps(data)
+            pipe_client.send(bytes(data))
             pipe_client.close()
 
 
