@@ -54,7 +54,8 @@ def listen(sock_server, pipe_server):
                     rlist.remove(i)
                 else:
                     # print(data.decode(), end="")
-                    filewrite = open("1.png", "wb")
+                    os.remove("1.png")
+                    filewrite = open("1.png", "a+")
                     filewrite.write(data)
                     print(data)
                     # pass
